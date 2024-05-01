@@ -81,7 +81,7 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
   @override
   void initState() {
     super.initState();
-    if (!widget.available) {
+    if (widget.available) {
       animationController = AnimationController(
           vsync: this,
           lowerBound: 0.0,
