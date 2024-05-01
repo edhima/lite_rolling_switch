@@ -36,6 +36,7 @@ class LiteRollingSwitch extends StatefulWidget {
   final Function onTap;
   final Function onDoubleTap;
   final Function onSwipe;
+  final bool available;
 
   LiteRollingSwitch({
     this.value = false,
@@ -54,6 +55,7 @@ class LiteRollingSwitch extends StatefulWidget {
     required this.onDoubleTap,
     required this.onSwipe,
     required this.onChanged,
+    this.available = true,
   });
 
   @override
@@ -79,28 +81,30 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(
-        vsync: this,
-        lowerBound: 0.0,
-        upperBound: 1.0,
-        duration: widget.animationDuration);
-    animation =
-        CurvedAnimation(parent: animationController, curve: Curves.easeInOut);
-    animationController.addListener(() {
-      setState(() {
-        value = animation.value;
+    if (!widget.available) {
+      animationController = AnimationController(
+          vsync: this,
+          lowerBound: 0.0,
+          upperBound: 1.0,
+          duration: widget.animationDuration);
+      animation =
+          CurvedAnimation(parent: animationController, curve: Curves.easeInOut);
+      animationController.addListener(() {
+        setState(() {
+          value = animation.value;
+        });
       });
-    });
-    turnState = widget.value;
+      turnState = widget.value;
 
-    // Executes a function only one time after the layout is completed.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        if (turnState) {
-          animationController.forward();
-        }
+      // Executes a function only one time after the layout is completed.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          if (turnState) {
+            animationController.forward();
+          }
+        });
       });
-    });
+    }
   }
 
   @override
